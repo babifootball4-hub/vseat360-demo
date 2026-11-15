@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VSeat360</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0d0a1a;--surface:#181330;--line:#2c2550;--text:#f1eefc;--muted:#a79fc9;--violet:#7c5cff;--amber:#ffb020;--ok:#3ddc97;--bad:#ff5d6c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Sora,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 96px}
+h1{font-size:26px;font-weight:800;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--violet);border:0;color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.top .sp{flex:1}.bal{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-weight:600}
+input,select{width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px;font:inherit}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.chip{flex:none;background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:7px 14px;font:inherit;cursor:pointer}
+.chip.on{background:var(--violet);border-color:var(--violet);color:#fff}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sub{color:var(--muted);font-size:13px}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:10px;background:#2a2150;color:var(--amber);margin-right:4px}
+.badge.g{color:var(--ok)}
+.price{font-weight:800;color:var(--amber);font-size:18px}
+.btn{background:var(--violet);color:#fff;border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+.btn.s{width:auto;padding:8px 14px}.btn.amber{background:var(--amber);color:#1a1200}.btn.off{background:#2c2550;color:var(--muted);cursor:not-allowed}
+.btn:focus-visible,.chip:focus-visible,.avatar:focus-visible,nav button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+nav{position:fixed;left:0;right:0;bottom:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;gap:4px;z-index:5}
+nav button{flex:1;max-width:120px;background:none;border:0;color:var(--muted);font:inherit;font-size:12px;padding:8px;cursor:pointer;border-radius:10px}
+nav button.on{color:var(--amber)}
+nav b{display:block;font-size:20px}
+.sheet{position:fixed;inset:0;background:rgba(5,3,15,.75);z-index:10;display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--surface);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));max-height:88vh;overflow:auto}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.note{background:#241c4a;border-radius:12px;padding:10px;font-size:13px;color:var(--muted);margin:10px 0}
+.room{position:fixed;inset:0;background:#000;z-index:8;touch-action:none}
+.room canvas{width:100%;height:100%;display:block}
+.hud{position:absolute;left:0;right:0;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 0;display:flex;gap:8px;align-items:center;top:0}
+.hud select{width:auto;flex:1;background:rgba(13,10,26,.7)}
+.hud .btn{width:auto;padding:10px 12px;background:rgba(13,10,26,.7)}
+.live{background:var(--bad);border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800}
+.chat{position:absolute;left:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:70%;pointer-events:none;font-size:13px}
+.chat p{margin:3px 0;text-shadow:0 1px 3px #000;background:rgba(13,10,26,.35);border-radius:10px;padding:3px 8px;width:fit-content}
+.bar{position:absolute;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:6px}
+.bar input{background:rgba(13,10,26,.75)}
+.bar .btn{width:auto;background:rgba(13,10,26,.75);padding:10px 12px}
+.fly{position:absolute;font-size:30px;animation:fly 2.2s ease-out forwards;pointer-events:none}
+@keyframes fly{to{transform:translateY(-300px);opacity:0}}
+.tx{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.empty{text-align:center;color:var(--muted);padding:30px 0}
+.sheet>.drw{background:var(--surface);width:86%;max-width:340px;height:100%;max-height:none;border-radius:0 20px 20px 0;overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 16px 20px}
+.mi{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--line);color:var(--text);font:inherit;padding:14px 4px;cursor:pointer;text-align:left}
+.tg{width:44px;height:26px;border-radius:13px;background:#2c2550;position:relative;border:0;cursor:pointer}.tg.on{background:var(--ok)}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}.tg.on::after{left:21px}
+.role{display:block;width:100%;text-align:left;background:var(--surface);border:2px solid var(--line);color:var(--text);border-radius:14px;padding:14px;margin-bottom:10px;font:inherit;cursor:pointer}.role.on{border-color:var(--violet);background:#241c4a}
+.mi:focus-visible,.role:focus-visible,.tg:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.fly{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav"></nav>
+<div id="layer"></div>
+<script>
+const H=3600e3,now=Date.now();
+const S={tab:'discover',sport:'All',q:'',wallet:{bal:250,esc:0,tx:[{t:'Wallet top-up',a:250}]},bookings:[],wait:{},user:null,notif:{booking:true,chat:true,promo:false},earn:0,listings:[],kyc:{id:false,cam:false,speed:false},pm:{Visa:true},r:'viewer',mode:'up'};
+const EV=[
+{id:1,name:'Real Madrid vs Barcelona',sport:'Football',venue:'Santiago Bernabéu',start:now+52*H,price:10,left:12,streamer:'Lucía M.'},
+{id:2,name:'Lakers vs Celtics',sport:'Basketball',venue:'Crypto.com Arena',start:now+30*H,price:14,left:5,streamer:'Marcus T.'},
+{id:3,name:'Coldplay live',sport:'Concert',venue:'Wembley Stadium',start:now+96*H,price:18,left:0,streamer:'Priya K.'},
+{id:4,name:'Wimbledon final',sport:'Tennis',venue:'Centre Court',start:now+75*H,price:16,left:8,streamer:'Oliver J.'},
+{id:5,name:'Derby night',sport:'Football',venue:'San Siro',start:now+6*H,price:9,left:20,streamer:'Gianni R.'}];
+const $=s=>document.querySelector(s),money=n=>'$'+n.toFixed(2).replace(/\.00$/,'');
+const when=t=>new Date(t).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const hrs=e=>(e.start-Date.now())/H;
+function nav(){const t=[['discover','🔍','Discover'],['trips','🎟️','My seats'],['host','🎥','Stream'],['wallet','👛','Wallet']];
+$('#nav').innerHTML=t.map(x=>`<button class="${S.tab==x[0]?'on':''}" data-t="${x[0]}"><b>${x[1]}</b>${x[2]}</button>`).join('');
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b){S.tab=b.dataset.t;render()}}}
+function hdr(){return `<div class="top"><button class="avatar" id="prof" aria-label="Open profile">${S.user?S.user.name[0]:'👤'}</button><h1>VSeat360</h1><span class="sp"></span><span class="bal">${money(S.wallet.bal)}</span></div>`}
+function discover(){const sp=['All','Football','Basketball','Tennis','Concert'];
+const list=EV.filter(e=>(S.sport=='All'||e.sport==S.sport)&&(e.name+e.venue).toLowerCase().includes(S.q.toLowerCase()));
+return hdr()+`<input id="q" placeholder="Search team, event or venue" value="${S.q}" aria-label="Search">
+<div class="chips">${sp.map(s=>`<button class="chip ${S.sport==s?'on':''}" data-sp="${s}">${s}</button>`).join('')}</div>`+
+(list.length?list.map(e=>`<div class="card"><div class="row"><div><b>${e.name}</b><div class="sub">${e.venue} · ${when(e.start)}</div></div><div class="price">${money(e.price)}</div></div>
+<div class="row" style="margin-top:10px"><div><span class="badge g">✓ Verified streamer</span><span class="badge">${e.left?e.left+' seats left':'Sold out'}</span></div>
+${e.left?(hrs(e)<24?'<button class="btn s off" disabled>Closed (under 24h)</button>':`<button class="btn s" data-book="${e.id}">Book seat</button>`):(S.wait[e.id]?'<button class="btn s off" disabled>On waitlist</button>':`<button class="btn s amber" data-wait="${e.id}">Notify me</button>`)}</div></div>`).join(''):'<div class="empty">No events match. Try another sport or clear the search.</div>')}
+function trips(){return hdr()+'<h2>My seats</h2>'+(S.bookings.length?S.bookings.map(b=>{const e=EV.find(x=>x.id==b.id);return `<div class="card"><b>${e.name}</b><div class="sub">${when(e.start)} · paid with ${b.pay}</div><div class="note">${money(b.amount)} held in escrow until the stream ends.</div><button class="btn" data-join="${e.id}">Enter stream room</button></div>`}).join(''):'<div class="empty">No bookings yet. Book a seat from Discover.</div>')}
+function host0(){return hdr()+`<h2>Stream an event</h2><div class="card"><p class="sub">Go to an event with a 360° camera and get paid for every seat you sell.</p>
+<div id="spd"><button class="btn" id="test">Test my connection</button></div></div>
+<div class="card"><b>Requirements</b><p class="sub">360° camera, 25+ Mbps upload, a verified ID, and GPS check-in at the venue.</p></div>`}
+function wallet(){const w=S.wallet;return hdr()+`<div class="card"><div class="sub">Available</div><div class="price" style="font-size:32px">${money(w.bal)}</div><div class="sub">Held in escrow: ${money(w.esc)}</div></div>
+<h2>Activity</h2><div class="card">${w.tx.map(t=>`<div class="tx"><span>${t.t}</span><b style="color:${t.a<0?'var(--bad)':'var(--ok)'}">${t.a<0?'−':'+'}${money(Math.abs(t.a))}</b></div>`).join('')}</div>`}
+function render(){nav();$('#app').innerHTML={discover,trips,host,wallet}[S.tab]()}
+function sheet(h){$('#layer').innerHTML=`<div class="sheet" id="sh"><div>${h}</div></div>`;$('#sh').onclick=e=>{if(e.target.id=='sh')closeSheet()}}
+function closeSheet(){$('#layer').innerHTML=''}
+function book(id){if(!S.user){S.mode='up';profile();return}const e=EV.find(x=>x.id==id);let pay='Visa';
+sheet(`<h2>${e.name}</h2><div class="sub">${e.venue} · ${when(e.start)}</div>
+<div class="note">Seats must be booked at least 24 hours ahead. Your payment stays in escrow and goes to the streamer only after the stream ends and you confirm the quality.</div>
+<b>Pay with</b><div class="pay" id="pm">${['Visa','Bitcoin','Ethereum','USDT'].map((p,i)=>`<button class="chip ${i?'':'on'}" data-p="${p}">${p}</button>`).join('')}</div>
+<div class="row" style="display:flex;justify-content:space-between;margin:12px 0"><span>Total</span><span class="price">${money(e.price)}</span></div>
+<button class="btn" id="pay">Pay ${money(e.price)} into escrow</button><div id="err" class="sub" style="color:var(--bad);margin-top:8px"></div>`);
+$('#pm').onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;pay=b.dataset.p;document.querySelectorAll('#pm .chip').forEach(c=>c.classList.toggle('on',c==b))};
+$('#pay').onclick=()=>{if(S.wallet.bal<e.price){$('#err').textContent='Not enough balance. Your wallet has '+money(S.wallet.bal)+'.';return}
+S.wallet.bal-=e.price;S.wallet.esc+=e.price;S.wallet.tx.unshift({t:'Escrow: '+e.name,a:-e.price});e.left--;S.bookings.push({id:e.id,pay,amount:e.price});closeSheet();S.tab='trips';render()}}
+function profile0(){sheet(`<h2>${S.user.name}</h2><div style="font-size:22px;color:var(--amber)">★ ${S.user.rating} <span class="sub">(${S.user.n} ratings)</span></div><p class="sub">${S.user.phone}</p>
+<button class="btn" data-go="trips" style="margin-bottom:8px">My seats</button><button class="btn" data-go="wallet">Wallet</button>`);
+$('#sh').onclick=e=>{const g=e.target.dataset.go;if(g){S.tab=g;closeSheet();render()}else if(e.target.id=='sh')closeSheet()}}
+/* ---- Stream room ---- */
+let R=null;
+function pano(){const c=document.createElement('canvas');c.width=2048;c.height=720;const g=c.getContext('2d');
+let gr=g.createLinearGradient(0,0,0,720);gr.addColorStop(0,'#090620');gr.addColorStop(.38,'#2a1d63');gr.addColorStop(.5,'#3b2a85');gr.addColorStop(.52,'#1c7a46');gr.addColorStop(1,'#0e4a2a');g.fillStyle=gr;g.fillRect(0,0,2048,720);
+for(let i=0;i<60;i++){g.fillStyle='rgba(255,255,255,'+(Math.random()*.7)+')';g.fillRect(Math.random()*2048,Math.random()*150,2,2)}
+for(let x=0;x<2048;x+=256){g.fillStyle='#fff8d0';g.beginPath();g.arc(x+128,200,14,0,7);g.fill();g.fillStyle='rgba(255,248,208,.12)';g.fillRect(x+118,200,20,150)}
+for(let r=0;r<9;r++)for(let x=0;x<2048;x+=11){g.fillStyle=`hsl(${(x*7+r*40)%360},55%,${28+r*3}%)`;g.beginPath();g.arc(x+(r%2)*5,250+r*13+Math.sin(x/9)*2,5,0,7);g.fill()}
+g.strokeStyle='rgba(255,255,255,.7)';g.lineWidth=3;for(let x=0;x<2048;x+=512){g.strokeRect(x+40,430,430,230);g.beginPath();g.arc(x+255,545,50,0,7);g.stroke()}
+return c}
+function join(id){const e=EV.find(x=>x.id==id);R={yaw:0,pitch:0,vr:false,gyro:false,ang:0,p:pano(),tilt:null};
+$('#layer').innerHTML=`<div class="room" id="room"><canvas id="cv"></canvas>
+<div class="hud"><button class="btn" id="x" aria-label="Leave room">✕</button><span class="live">LIVE</span>
+<select id="angle" aria-label="Camera angle"><option>Angle 1 · Stands</option><option>Angle 2 · Pitchside</option><option>Angle 3 · Fan zone</option></select>
+<button class="btn" id="vr" aria-label="VR split mode">VR</button><button class="btn" id="gy" aria-label="Use motion sensor">🧭</button></div>
+<div class="chat" id="chat"></div>
+<div class="bar"><input id="msg" placeholder="Say something" aria-label="Chat message"><button class="btn" data-e="🔥">🔥</button><button class="btn" data-e="👏">👏</button><button class="btn" id="tip">💸</button></div></div>`;
+const cv=$('#cv'),g=cv.getContext('2d');let drag=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight}size();
+const room=$('#room');
+room.onpointerdown=e=>{if(e.target.closest('.hud,.bar'))return;drag={x:e.clientX,y:e.clientY}};
+room.onpointermove=e=>{if(!drag)return;R.yaw-=(e.clientX-drag.x)*.9;R.pitch=Math.max(-120,Math.min(120,R.pitch+(e.clientY-drag.y)*.5));drag={x:e.clientX,y:e.clientY}};
+room.onpointerup=()=>drag=null;
+function eye(x,w,h){const ph=R.p.height,vw=w*(2048/ (w*3.2)),sx=((R.yaw*2+R.ang*600)%2048+2048)%2048,sy=Math.max(0,Math.min(ph-h*.9,ph/2-h*.45+R.pitch));
+const sw=Math.min(2048,w*1.6);g.drawImage(R.p,sx,sy,sw,h*.9,x,0,w,h);if(sx+sw>2048)g.drawImage(R.p,sx-2048,sy,sw,h*.9,x,0,w,h)}
+let raf;(function loop(){const w=cv.width,h=cv.height;g.clearRect(0,0,w,h);
+if(R.vr){eye(0,w/2,h);eye(w/2,w/2,h);g.fillStyle='#000';g.fillRect(w/2-2,0,4,h)}else eye(0,w,h);raf=requestAnimationFrame(loop)})();
+const say=(n,t)=>{const c=$('#chat');c.insertAdjacentHTML('beforeend',`<p><b>${n}</b> ${t}</p>`);while(c.children.length>5)c.firstChild.remove()};
+say(e.streamer,'Welcome in! Look around, the crowd is loud tonight.');
+const bots=[['Sam','What a view!'],['Nora','That roar 🔊'],['Leo','Switch to angle 3'],['Ana','Worth every cent']];let bi=0;const bt=setInterval(()=>{if(!$('#chat')){clearInterval(bt);return}say(...bots[bi++%4])},3500);
+const fly=em=>{const f=document.createElement('div');f.className='fly';f.textContent=em;f.style.left=(20+Math.random()*60)+'%';f.style.bottom='90px';room.appendChild(f);setTimeout(()=>f.remove(),2300)};
+room.onclick=ev=>{const b=ev.target.closest('[data-e]');if(b)fly(b.dataset.e)};
+$('#msg').onkeydown=ev=>{if(ev.key=='Enter'&&ev.target.value.trim()){say('You',ev.target.value.replace(/</g,'&lt;'));ev.target.value=''}};
+$('#angle').onchange=ev=>R.ang=ev.target.selectedIndex;
+$('#vr').onclick=()=>{R.vr=!R.vr};
+$('#tip').onclick=()=>{if(S.wallet.bal>=5){S.wallet.bal-=5;S.wallet.tx.unshift({t:'Tip to '+e.streamer,a:-5});say('You','tipped '+e.streamer+' $5 🎉');fly('💸')}else say('System','Not enough balance to tip.')};
+$('#gy').onclick=async()=>{try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission){if(await DeviceOrientationEvent.requestPermission()!='granted')return}
+let last=null;R.tilt=ev=>{if(ev.alpha==null)return;if(last!=null){let d=ev.alpha-last;if(d>180)d-=360;if(d<-180)d+=360;R.yaw-=d*1.6}last=ev.alpha;R.pitch=Math.max(-120,Math.min(120,(ev.beta-80)*2))};
+addEventListener('deviceorientation',R.tilt);say('System','Motion sensor on. Turn your phone to look around.')}catch(_){say('System','Motion sensor unavailable. Drag to look around.')}};
+$('#x').onclick=()=>{cancelAnimationFrame(raf);clearInterval(bt);if(R.tilt)removeEventListener('deviceorientation',R.tilt);removeEventListener('resize',size);
+const b=S.bookings.find(b=>b.id==id);closeSheet();
+if(b&&!b.done){sheet(`<h2>Release payment?</h2><p class="sub">The stream ended. If the quality was good, release ${money(b.amount)} from escrow to ${e.streamer}.</p><button class="btn" id="rel">Release payment</button><button class="btn" id="rep" style="background:#2c2550;margin-top:8px">Report a problem</button>`);
+$('#rel').onclick=()=>{b.done=1;S.wallet.esc-=b.amount;S.wallet.tx.unshift({t:'Released to '+e.streamer,a:0});closeSheet();render()};
+$('#rep').onclick=()=>{closeSheet();sheet('<h2>Report received</h2><p class="sub">Your payment stays in escrow while we review. No money moves until this is resolved.</p><button class="btn" id="ok">Close</button>');$('#ok').onclick=()=>{closeSheet();render()}}}}
+addEventListener('resize',size)}
+/* ---- Account, profile, streamer ---- */
+function auth(){const up=S.mode!='in';return `<div style="padding-top:20px"><h1>VSeat360</h1><p class="sub">Be at the event without being there.</p><h2 style="margin-top:20px">${up?'Create your account':'Welcome back'}</h2>
+${up?'<input id="nm" placeholder="Full name" aria-label="Full name" style="margin-bottom:8px">':''}<input id="ph" type="tel" placeholder="Phone number" aria-label="Phone number" style="margin-bottom:8px"><input id="pw" type="password" placeholder="Password (6+ characters)" aria-label="Password" style="margin-bottom:14px">
+${up?`<b>I want to</b><div style="margin-top:8px"><button class="role ${S.r=='viewer'?'on':''}" data-r="viewer"><b>Watch events</b><div class="sub">Viewer: book a seat and watch live in 360° from anywhere.</div></button><button class="role ${S.r=='streamer'?'on':''}" data-r="streamer"><b>Stream events and earn</b><div class="sub">Streamer: attend events with a 360° camera and get paid for each seat.</div></button></div>`:''}
+<div id="aerr" class="sub" style="color:var(--bad);margin:6px 0"></div><button class="btn" data-act="go">${up?'Sign up':'Sign in'}</button>
+<p style="text-align:center"><button class="chip" data-act="mode">${up?'I already have an account':'Create a new account'}</button></p></div>`}
+function profile(){if(!S.user){$('#layer').innerHTML=`<div class="sheet" id="sh" style="justify-content:flex-start;align-items:stretch"><div class="drw">${auth()}</div></div>`;$('#sh').onclick=e=>{if(e.target.id=='sh')closeSheet()};return}const u=S.user,st=u.role=='streamer';
+$('#layer').innerHTML=`<div class="sheet" id="sh" style="justify-content:flex-start;align-items:stretch"><div class="drw">
+<div style="display:flex;gap:12px;align-items:center"><div class="avatar" style="display:grid;place-items:center;flex:none">${u.name[0]}</div><div><b>${u.name}</b><div style="color:var(--amber)">★ ${u.rating} <span class="sub">(${u.n} ratings)</span></div><div class="sub">${u.phone}</div></div></div>
+<div style="margin:12px 0"><span class="badge">${st?'Streamer':'Viewer'}</span>${st&&S.kyc.id?'<span class="badge g">✓ ID verified</span>':''}</div>
+${st?`<div class="card"><div class="sub">Earnings</div><div class="price">${money(S.earn)}</div></div>`:''}
+<button class="mi" data-act="nav" data-t="trips">My seats <span>›</span></button><button class="mi" data-act="nav" data-t="wallet">Wallet <span>›</span></button>
+<button class="mi" data-act="pm">Payment methods <span>›</span></button><button class="mi" data-act="notif">Notifications <span>›</span></button>
+<button class="mi" data-act="role">${st?'Streamer dashboard':'Become a streamer'} <span>›</span></button><button class="mi" data-act="help">Help and safety <span>›</span></button>
+<button class="mi" data-act="legal">Terms and privacy <span>›</span></button><button class="mi" data-act="out" style="color:var(--bad)">Sign out</button></div></div>`;
+$('#sh').onclick=e=>{if(e.target.id=='sh')closeSheet()}}
+function host(){if(!S.user||S.user.role!='streamer')return hdr()+`<h2>Stream and earn</h2><div class="card"><p class="sub">Go to events with a 360° camera. Viewers book seats and you get paid after each stream.</p><button class="btn" data-act="role">Become a streamer</button></div>`;
+const k=S.kyc,ok=k.id&&k.cam&&k.speed;
+return hdr()+`<h2>Streamer dashboard</h2><div class="card"><div class="sub">Total earned</div><div class="price" style="font-size:30px">${money(S.earn)}</div></div>
+<div class="card"><b>Get verified</b>${[['id','Verify your ID','Verify ID'],['cam','Add your 360° camera','Add camera'],['speed','Test your connection (25+ Mbps)','Run test']].map(x=>`<div class="tx"><span>${k[x[0]]?'✓':'○'} ${x[1]}</span>${k[x[0]]?'<span class="badge g">Done</span>':`<button class="btn s" data-act="kyc" data-k="${x[0]}">${x[2]}</button>`}</div>`).join('')}</div>
+<button class="btn ${ok?'':'off'}" data-act="list" ${ok?'':'disabled'}>Create stream listing</button>
+<h2 style="margin-top:16px">My listings</h2>${S.listings.length?S.listings.map((l,i)=>`<div class="card"><div class="row"><div><b>${l.n}</b><div class="sub">${l.v} · ${when(l.t)}</div></div><div class="price">${money(l.p)}</div></div><button class="btn s" data-act="sale" data-i="${i}" style="margin-top:8px">Demo: simulate a sold seat</button></div>`).join(''):'<div class="empty">No listings yet. Finish verification, then list an event you will attend.</div>'}`}
+function pmSheet(){sheet(`<h2>Payment methods</h2>${['Visa','Bitcoin','Ethereum','USDT'].map(p=>`<div class="tx"><span>${p}</span><button class="btn s ${S.pm[p]?'off':''}" data-act="pmt" data-k="${p}">${S.pm[p]?'Remove':'Connect'}</button></div>`).join('')}<p class="sub">Crypto connects through your own wallet. This preview stores no real payment details.</p>`)}
+function notifSheet(){sheet(`<h2>Notifications</h2>${[['booking','Booking reminders'],['chat','Chat replies'],['promo','Offers and waitlist alerts']].map(x=>`<div class="tx"><span>${x[1]}</span><button class="tg ${S.notif[x[0]]?'on':''}" data-act="tg" data-k="${x[0]}" aria-label="${x[1]}"></button></div>`).join('')}`)}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+if(t.dataset.r){S.r=t.dataset.r;document.querySelectorAll('.role').forEach(b=>b.classList.toggle('on',b==t));return}
+const a=t.dataset.act;if(!a)return;
+if(a=='mode'){S.mode=S.mode=='in'?'up':'in';profile()}
+else if(a=='go'){const up=S.mode!='in',nm=($('#nm')||{value:''}).value.trim(),ph=$('#ph').value.trim(),pw=$('#pw').value;
+if(!ph||pw.length<6||(up&&!nm)){$('#aerr').textContent=up?'Enter your name, phone number and a password of 6+ characters.':'Enter your phone number and a password of 6+ characters.';return}
+S.user=up?{name:nm,phone:ph,rating:5,n:0,role:S.r}:{name:'Alex',phone:ph,rating:4.9,n:128,role:'viewer'};S.tab=S.user.role=='streamer'?'host':'discover';closeSheet();render()}
+else if(a=='nav'){S.tab=t.dataset.t;closeSheet();render()}
+else if(a=='pm')pmSheet();
+else if(a=='pmt'){const k=t.dataset.k;S.pm[k]=!S.pm[k];pmSheet()}
+else if(a=='notif')notifSheet();
+else if(a=='tg'){const k=t.dataset.k;S.notif[k]=!S.notif[k];notifSheet()}
+else if(a=='role'){if(!S.user){S.r='streamer';S.mode='up';profile()}else if(S.user.role=='streamer'){S.tab='host';closeSheet();render()}else sheet(`<h2>Become a streamer</h2><p class="sub">Attend events with a 360° camera and sell seats to viewers around the world. You keep 85% of each seat.</p><div class="note">You will verify your ID, add your camera and pass a connection test before you can list a stream.</div><button class="btn" data-act="start">Start</button>`)}
+else if(a=='start'){S.user.role='streamer';S.tab='host';closeSheet();render()}
+else if(a=='kyc'){S.kyc[t.dataset.k]=true;render()}
+else if(a=='list')sheet(`<h2>New stream listing</h2><select id="le" aria-label="Event">${EV.filter(e=>hrs(e)>24).map(e=>`<option value="${e.id}">${e.name} · ${when(e.start)}</option>`).join('')}</select><input id="lp" type="number" min="1" value="10" aria-label="Price per seat in dollars" style="margin:8px 0"><div class="note">You earn 85% of each seat. Payment is released after the stream ends and the viewer confirms.</div><button class="btn" data-act="pub">Publish listing</button>`);
+else if(a=='pub'){const ev=EV.find(x=>x.id==$('#le').value),p=+$('#lp').value;if(!ev||!(p>0))return;S.listings.push({n:ev.name,v:ev.venue,t:ev.start,p});closeSheet();render()}
+else if(a=='sale'){S.earn+=S.listings[+t.dataset.i].p*.85;render()}
+else if(a=='help')sheet('<h2>Help and safety</h2><p class="sub">Your payment stays in escrow until the stream ends and you confirm it. Report any problem from inside the stream room and no money moves until we review it.</p><p class="sub">Streamers must follow each venue’s filming rules. Streams that break them can be suspended.</p>');
+else if(a=='legal')sheet('<h2>Terms and privacy</h2><p class="sub">Placeholder text for the preview. Real terms and a privacy policy are required before store submission.</p>');
+else if(a=='out'){S.user=null;S.mode='in';closeSheet();render()}});
+/* ---- Events ---- */
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+if(t.id=='prof')profile();
+else if(t.dataset.sp){S.sport=t.dataset.sp;render()}
+else if(t.dataset.book)book(+t.dataset.book);
+else if(t.dataset.wait){S.wait[t.dataset.wait]=1;render()}
+else if(t.dataset.join)join(+t.dataset.join);
+else if(t.id=='test'){$('#spd').innerHTML='<div class="sub">Testing…</div>';setTimeout(()=>{const u=18+Math.random()*30;$('#spd').innerHTML=`<div class="price">${u.toFixed(0)} Mbps up</div><div class="sub" style="color:${u>=25?'var(--ok)':'var(--bad)'}">${u>=25?'Passed. You can list a stream.':'Too slow. Move closer to your router or use a bonded uplink.'}</div>`},1200)}});
+document.addEventListener('input',e=>{if(e.target.id=='q'){S.q=e.target.value;const p=e.target.selectionStart;render();const i=$('#q');i.focus();i.setSelectionRange(p,p)}});
+render();
+</script>
+</body>
+</html>
